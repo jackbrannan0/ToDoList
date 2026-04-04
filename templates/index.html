@@ -34,7 +34,7 @@
             
             <main>
                 <section class="add-task-section">
-                    <form action="/add" method="post" class="add-task-form">
+                    <form action="/add" method="post" class="form">
                         <div class="input-group">
                             <input type="text" name="new_task" placeholder="Enter a task..." required>
                             <button type="submit" class="add-btn">Add Task</button>
@@ -48,7 +48,7 @@
                         {% for task in tasks %}
                         <li class="task-item"> 
                             <span class="task-text">{{ task[1] }}</span>
-                            <form action="/complete/{{ task[0] }}" method="post" class="complete-form">
+                            <form action="/complete/{{ task[0] }}" method="post" class="form">
                                 <button type="submit" class="complete-btn">Complete</button>
                             </form>
                         </li>  
@@ -66,10 +66,10 @@
                         <li class="completed-item">
                             <span class="task-text">{{ task[1] }}</span>
                             <div class="task-actions">
-                                <form action="/uncomplete/{{ task[0] }}" method="post" class="uncomplete-form">
+                                <form action="/uncomplete/{{ task[0] }}" method="post" class="form">
                                     <button type="submit" class="uncomplete-btn">Uncomplete</button>
                                 </form>
-                                <form action="/delete/{{ task[0] }}" method="post" class="delete-form">
+                                <form action="/delete/{{ task[0] }}" method="post" class="form">
                                     <button type="submit" class="delete-btn">Delete</button>
                                 </form>
                             </div>
@@ -78,6 +78,7 @@
                     </ul>
                 </section>
             </main>
-        </div>f
+        </div>
+        <script src="{{url_for('static',filename='app.js')}}"></script>
     </body>
 </html>

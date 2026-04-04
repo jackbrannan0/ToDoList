@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, flash#importing Flask
+from flask import Flask, render_template, request, redirect, flash, jsonify
 import sqlite3
 import os
 import secrets
 
 
 
-def init_db():
+def init_db(): # Initialising database functiom
     with sqlite3.connect('database.db') as conn:
         conn.execute('CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT)')
         print("Database initialised!")
@@ -20,11 +20,11 @@ init_db()
 app = Flask(__name__) # Flask instance
 
 app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
-print(app.secret_key)
+print(app.secret_key) # Key needed for flask pop-up messages
 
 @app.route('/') # base path
 
-def index():
+def index(): # Gets completed and non completed tasks from the database
     with sqlite3.connect('database.db') as conn:
         cursor = conn.execute('SELECT * FROM tasks WHERE completed = 0 OR COMPLETED IS NULL')
         tasks = cursor.fetchall()
@@ -36,14 +36,13 @@ def index():
 
 @app.route('/add', methods=['POST'])
 
-def add_task():
+def add_task(): # add tasks to database function
     content = request.form.get('new_task')
     if content:
         with sqlite3.connect('database.db') as conn:
             conn.execute('INSERT INTO tasks (content) VALUES (?)',(content,))
             conn.commit()
-        flash('Task added!', 'success')    
-    return redirect('/')
+    return jsonify({"status":"success","message": "Task added to DB!"})
 
         
 
@@ -51,32 +50,32 @@ def add_task():
 # Add a new route to handle task deletion
 @app.route('/delete/<int:task_id>', methods=['POST'])
 
-def delete_tasks(task_id):
+def delete_tasks(task_id): # delete tasks from database
     with sqlite3.connect('database.db') as conn:
         conn.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
         conn.commit()
-    flash('Task deleted!', 'success')    
-    return redirect('/')    
+   
+    return jsonify({"status": "success", "message": "Deleted"})   
     
     
 @app.route('/complete/<int:task_id>', methods=['POST'])
 
-def complete_tasks(task_id):
+def complete_tasks(task_id): # complete task function - sends to db
     with sqlite3.connect('database.db') as conn:
         conn.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (task_id,))
         conn.commit()
-    flash('Task completed!', 'success')    
-    return redirect('/')    
+  
+    return jsonify({"status": "success", "message": "Completed"}) 
 
 
 @app.route('/uncomplete/<int:task_id>', methods=['POST'])
 
-def uncomplete_tasks(task_id):
+def uncomplete_tasks(task_id): # function to uncomplete task
     with sqlite3.connect('database.db') as conn:
         conn.execute('UPDATE tasks SET completed = 0 WHERE id = ?', (task_id,))
         conn.commit()
-    flash('Task uncompleted!', 'success')    
-    return redirect('/')    
+  
+    return jsonify({"status": "success", "message": "Uncompleted"})
 
 if __name__ == "__main__":
     app.run(debug=True) 
