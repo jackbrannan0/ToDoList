@@ -26,10 +26,12 @@ my_tasks = ['Buy Food', 'Do Coding', 'Walk Dog'] # Task List
 
 def index():
     with sqlite3.connect('database.db') as conn:
-        cursor = conn.execute('SELECT * FROM tasks')
+        cursor = conn.execute('SELECT * FROM tasks WHERE completed = 0 OR COMPLETED IS NULL')
         tasks = cursor.fetchall()
-        
-    return render_template("index.html", tasks=tasks) # allows flask to render index.html and import task list
+
+        cursor = conn.execute('SELECT * FROM tasks WHERE completed = 1 ')
+        completed_tasks = cursor.fetchall()        
+    return render_template("index.html", tasks=tasks, completed_tasks=completed_tasks) # allows flask to render index.html and import task list
 
 
 @app.route('/add', methods=['POST'])
@@ -56,8 +58,22 @@ def delete_tasks(task_id):
     return redirect('/')    
     
     
+@app.route('/complete/<int:task_id>', methods=['POST'])
+
+def complete_tasks(task_id):
+    with sqlite3.connect('database.db') as conn:
+        conn.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (task_id,))
+        conn.commit()
+    return redirect('/')    
 
 
+@app.route('/uncomplete/<int:task_id>', methods=['POST'])
+
+def uncomplete_tasks(task_id):
+    with sqlite3.connect('database.db') as conn:
+        conn.execute('UPDATE tasks SET completed = 0 WHERE id = ?', (task_id,))
+        conn.commit()
+    return redirect('/')    
 
 if __name__ == "__main__":
     app.run(debug=True) 
