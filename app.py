@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, jsonify
+from flask import Flask, render_template, request, jsonify
 import sqlite3
 import os
 import secrets
@@ -42,7 +42,7 @@ def add_task(): # add tasks to database function
         with sqlite3.connect('database.db') as conn:
             conn.execute('INSERT INTO tasks (content) VALUES (?)',(content,))
             conn.commit()
-    return jsonify({"status":"success","message": "Task added to DB!"})
+    return jsonify({"status":"success","message": "Added"})
 
         
 
