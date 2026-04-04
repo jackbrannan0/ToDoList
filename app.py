@@ -20,6 +20,7 @@ init_db()
 app = Flask(__name__) # Flask instance
 
 app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+print(app.secret_key)
 
 @app.route('/') # base path
 
