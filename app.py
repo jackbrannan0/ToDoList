@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, redirect#importing Flask
+from flask import Flask, render_template, request, redirect, flash#importing Flask
 import sqlite3
+import os
+import secrets
 
 
 
@@ -17,10 +19,7 @@ init_db()
 
 app = Flask(__name__) # Flask instance
 
-my_tasks = ['Buy Food', 'Do Coding', 'Walk Dog'] # Task List
-
-
-
+app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 
 @app.route('/') # base path
 
@@ -42,7 +41,7 @@ def add_task():
         with sqlite3.connect('database.db') as conn:
             conn.execute('INSERT INTO tasks (content) VALUES (?)',(content,))
             conn.commit()
-            
+        flash('Task added!', 'success')    
     return redirect('/')
 
         
@@ -55,6 +54,7 @@ def delete_tasks(task_id):
     with sqlite3.connect('database.db') as conn:
         conn.execute('DELETE FROM tasks WHERE id = ?', (task_id,))
         conn.commit()
+    flash('Task deleted!', 'success')    
     return redirect('/')    
     
     
@@ -64,6 +64,7 @@ def complete_tasks(task_id):
     with sqlite3.connect('database.db') as conn:
         conn.execute('UPDATE tasks SET completed = 1 WHERE id = ?', (task_id,))
         conn.commit()
+    flash('Task completed!', 'success')    
     return redirect('/')    
 
 
@@ -73,6 +74,7 @@ def uncomplete_tasks(task_id):
     with sqlite3.connect('database.db') as conn:
         conn.execute('UPDATE tasks SET completed = 0 WHERE id = ?', (task_id,))
         conn.commit()
+    flash('Task uncompleted!', 'success')    
     return redirect('/')    
 
 if __name__ == "__main__":
