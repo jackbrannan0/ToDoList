@@ -54,10 +54,6 @@ def add_task(): # add tasks to database function
     else:
         return jsonify({"status":"failure","message":"Unable to add" })
 
-    
-
-        
-
 
 # Add a new route to handle task deletion
 @app.route('/delete/<int:task_id>', methods=['POST'])
