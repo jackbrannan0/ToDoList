@@ -1,2 +1,4 @@
 instance/
 venv/
+__pycache__/
+.cursor/
