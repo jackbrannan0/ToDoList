@@ -10,7 +10,7 @@ def index(): # Gets completed and non completed tasks from the database
     Task.query.all()        
     tasks = Task.query.filter_by(completed=False).all()
     completed_tasks = Task.query.filter_by(completed=True).all()
-    return render_template("index.html") # allows flask to render index.html and import task list
+    return render_template("index.html", tasks=tasks, completed_tasks=completed_tasks) # allows flask to render index.html and import task list
 
 
 @app.route('/add', methods=['POST'])
@@ -54,11 +54,6 @@ def complete_tasks(task_id): # complete task function - sends to db
         return jsonify({"status": "success", "message": "Completed"}) 
     else:
         return jsonify({"status":"failure","message":"Unable to complete" })
-
-        
-  
-    
-
 
 @app.route('/uncomplete/<int:task_id>', methods=['POST'])
 
