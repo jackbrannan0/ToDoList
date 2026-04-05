@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Login</title>
+</head>
+<body>
+    <div class="auth-container">
+        <h2>Login</h2>
+        
+        <form action="{{ url_for('login') }}" method="post" class="form">
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+            
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+
+            <button type="submit" class="btn-submit">Login</button>
+
+            {% if error %}
+                <p style="color: red; margin-top: 10px;">{{ error }}</p>
+            {% endif %}
+        </form>
+
+        <div class="auth-switch">
+            <p>New to the app?</p>
+            <a href="{{ url_for('register') }}" class="btn-secondary">Create an account</a>
+        </div>
+    </div>
+</body>
+</html>

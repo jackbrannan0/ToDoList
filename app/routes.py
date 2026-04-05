@@ -1,5 +1,5 @@
 from app import app,db
-
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import render_template, request, jsonify, url_for,redirect
 
 # base path
@@ -77,13 +77,38 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
+        hashed_value = generate_password_hash(password, method='pbkdf2:sha256')
+
         user = User.query.filter_by(username=username).first()
+
+        
         if user:
             return render_template('register.html', error="User already exists")
         else:
-            new_user = User(username=username, password_hash=password)
+            new_user = User(username=username, password_hash=hashed_value)
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for('index'))  # redirect to login page
 
     return render_template('register.html')
+
+
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    from app.models import User
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password_attempt = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()
+
+        # check_password_hash handles the heavy lifting
+        if user and check_password_hash(user.password_hash, password_attempt):
+            # Success!
+            return redirect(url_for('index'))
+        else:
+            # Failure
+            return render_template('login.html', error="Invalid username or password")
+    return render_template('login.html')

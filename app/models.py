@@ -7,5 +7,5 @@ class Task(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), nullable=False, unique=True)
-    password_hash = db.Column(db.String(20), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
     created = db.Column(db.Boolean, default=False)    
