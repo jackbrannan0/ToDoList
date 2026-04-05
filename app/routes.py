@@ -1,15 +1,16 @@
 from app import app,db
 
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, url_for,redirect
 
-@app.route('/') # base path
+# base path
 
+@app.route('/tasks', methods=['GET', 'POST'])
 def index(): # Gets completed and non completed tasks from the database
     from app.models import Task
     Task.query.all()        
     tasks = Task.query.filter_by(completed=False).all()
     completed_tasks = Task.query.filter_by(completed=True).all()
-    return render_template("index.html", tasks=tasks, completed_tasks=completed_tasks) # allows flask to render index.html and import task list
+    return render_template("index.html") # allows flask to render index.html and import task list
 
 
 @app.route('/add', methods=['POST'])
@@ -71,3 +72,23 @@ def uncomplete_tasks(task_id): # function to uncomplete task
     else:
         return jsonify({"status":"failure","message":"Unable to revert" })
 
+
+
+
+@app.route('/', methods=['GET','POST']) 
+def register():
+    from app.models import User
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        user = User.query.filter_by(username=username).first()
+        if user:
+            return render_template('register.html', error="User already exists")
+        else:
+            new_user = User(username=username, password_hash=password)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('index'))  # redirect to login page
+
+    return render_template('register.html')
