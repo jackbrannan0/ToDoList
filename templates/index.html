@@ -47,8 +47,8 @@
                     <ul class="task-list">
                         {% for task in tasks %}
                         <li class="task-item"> 
-                            <span class="task-text">{{ task[1] }}</span>
-                            <form action="/complete/{{ task[0] }}" method="post" class="form">
+                            <span class="task-text">{{ task.content }}</span>
+                            <form action="/complete/{{ task.id }}" method="post" class="form">
                                 <button type="submit" class="complete-btn">Complete</button>
                             </form>
                         </li>  
@@ -64,12 +64,12 @@
                     <ul class="completed-list">
                         {% for task in completed_tasks %}
                         <li class="completed-item">
-                            <span class="task-text">{{ task[1] }}</span>
+                            <span class="task-text">{{ task.content }}</span>
                             <div class="task-actions">
-                                <form action="/uncomplete/{{ task[0] }}" method="post" class="form">
+                                <form action="/uncomplete/{{ task.id }}" method="post" class="form">
                                     <button type="submit" class="uncomplete-btn">Uncomplete</button>
                                 </form>
-                                <form action="/delete/{{ task[0] }}" method="post" class="form">
+                                <form action="/delete/{{ task.id }}" method="post" class="form">
                                     <button type="submit" class="delete-btn">Delete</button>
                                 </form>
                             </div>
