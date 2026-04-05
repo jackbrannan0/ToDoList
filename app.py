@@ -1,21 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-import sqlite3
+
 import os
 import secrets
 
-
-
-def init_db(): # Initialising database functiom
-    with sqlite3.connect('database.db') as conn:
-        conn.execute('CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT)')
-        print("Database initialised!")
-        try:
-            conn.execute('ALTER TABLE tasks ADD COLUMN completed BOOLEAN DEFAULT 0')
-        except sqlite3.OperationalError:
-            print("Column already exists!")    
-
-init_db()        
 
 
 app = Flask(__name__) # Flask instance
