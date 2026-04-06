@@ -16,6 +16,7 @@ def load_user(user_id):
 # base path
 
 @app.route('/tasks', methods=['GET', 'POST'])
+@login_required
 def index(): # Gets completed and non completed tasks from the database
     from app.models import Task
     Task.query.all()        
@@ -43,12 +44,12 @@ def add_task(): # add tasks to database function
 def delete_tasks(task_id): # delete tasks from database
     from app.models import Task
     task_to_delete = Task.query.get(task_id)
-    if task_to_delete:
+    if task_to_delete.user_id == current_user.id:
         db.session.delete(task_to_delete)
         db.session.commit()
         return jsonify({"status": "success", "message": "Deleted"})  
     else:
-        return jsonify({"status":"failure","message":"Unable to delete" })
+        return "Unauthorized", 403
    
      
     
@@ -58,24 +59,24 @@ def delete_tasks(task_id): # delete tasks from database
 def complete_tasks(task_id): # complete task function - sends to db
     from app.models import Task
     task = Task.query.get(task_id)
-    if task:
+    if task.user_id == current_user.id:
         task.completed = True
         db.session.commit()
         return jsonify({"status": "success", "message": "Completed"}) 
     else:
-        return jsonify({"status":"failure","message":"Unable to complete" })
+        return "Unauthorized", 403
 
 @app.route('/uncomplete/<int:task_id>', methods=['POST'])
 @login_required
 def uncomplete_tasks(task_id): # function to uncomplete task
     from app.models import Task
     task = Task.query.get(task_id)
-    if task:
+    if task.user_id == current_user.id:
         task.completed = False
         db.session.commit()
         return jsonify({"status": "success", "message": "Uncompleted"}) 
     else:
-        return jsonify({"status":"failure","message":"Unable to revert" })
+        return "Unauthorized", 403
 
 
 
