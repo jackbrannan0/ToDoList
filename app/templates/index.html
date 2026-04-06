@@ -5,6 +5,14 @@
         <meta name="viewport" content="width=device-width, intial-scale=1.0">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <title>To-Do List App</title>
+
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1>To-Do List</h1>
+        <p class="subtitle">Welcome, {{ current_user.username }}!</p>
+    </div>
+    <a href="{{ url_for('logout') }}" class="delete-btn" style="text-decoration: none;">Logout</a>
+</header>
     </head>   
     <body>
         <div class="messages">
@@ -18,15 +26,6 @@
                 {% endif %}
             {% endwith %}            
         </div>
-
-
-
-
-
-
-
-
-
         <div class="container">
             <header>
                 <h1>To-Do List</h1>
